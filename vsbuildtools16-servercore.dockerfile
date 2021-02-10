@@ -1,7 +1,7 @@
 # escape=`
 
 # Use the latest Windows Server Core image with .NET Framework 4.8.
-FROM mcr.microsoft.com/powershell:windowsservercore-1909
+FROM mcr.microsoft.com/windows/servercore:1809
 
 # Download the Build Tools bootstrapper.
 ADD https://aka.ms/vs/16/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
@@ -9,7 +9,7 @@ ADD https://aka.ms/vs/16/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
 # Restore the default Windows shell for correct batch processing.
 SHELL ["cmd", "/S", "/C"]
 
-RUN pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" `
+RUN powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" `
     && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 # Install Chocolatey
 RUN choco config set cachelocation C:\chococache `
@@ -31,4 +31,4 @@ ENV VS_BUILD_TOOL_PATH C:\BuildTools
 # Define the entry point for the docker container.
 # This entry point starts the developer command prompt and launches the PowerShell shell.
 # ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "pwsh.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
-ENTRYPOINT ["pwsh.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
+ENTRYPOINT ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
